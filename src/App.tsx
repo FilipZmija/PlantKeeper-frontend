@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef } from "react";
+import Login from "./Auth/Login";
+import "./App.css";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import MainView from "./Plants/MainView";
+import NavBar from "./NavBar";
+import axios from "axios";
+import { login } from "./redux/authSlice";
+export default function App() {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const [loading, setLoading] = React.useState(true);
+  useEffect(() => {
+    const exisitngToken = localStorage.getItem("token");
+    if (exisitngToken)
+      (async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/user/data`,
+            {
+              headers: {
+                Authorization: `Bearer ${exisitngToken}`,
+              },
+            }
+          );
+          const { id, name } = response.data;
+          dispatch(login({ id, name, accessToken: exisitngToken }));
+        } catch (e: any) {
+          console.error(e);
+          localStorage.removeItem("token");
+        } finally {
+          setLoading(false);
+        }
+      })();
+    else setLoading(false);
+  }, []);
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  return !loading ? (
+    <div className="flex flex-col h-screen">
+      <NavBar />
+      {token ? <MainView /> : <Login />}
     </div>
+  ) : (
+    <></>
   );
 }
-
-export default App;
