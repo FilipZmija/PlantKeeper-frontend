@@ -1,13 +1,11 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.btn-primary {
+  @apply rounded-md bg-green text-lg mx-2 px-4 py-2 font-semibold text-text-green shadow-md hover:bg-dark-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  active:scale-95;
+}
+.btn-secondary {
+  @apply rounded-md bg-light-mint text-lg mx-2 px-4 py-2 font-semibold text-text-green hover:bg-lightgreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  active:scale-95;
 }
