@@ -1,70 +1,121 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import plantimg from "./img.jpg";
-import { Plant } from "../types/plants";
-import PlantProp from "./PlantProp";
+import { TOwnedPlant } from "../types/plants";
+import Carousel from "./Carousel";
+import PlantBasicInfo from "./PlantBasicInfo";
+import OwnedPlantInfo from "./OwnedPlantInfo";
+
+const cardSizeClasses = {
+  xsmall: "max-w-56",
+  small: "max-w-72",
+  medium: "max-w-xs",
+  large: "max-w-sm",
+};
+
+const cardSizeClassesPadding = {
+  xsmall: "p-2",
+  small: "p-3",
+  medium: "p-4",
+  large: "p-5",
+};
+
+const textSizeClasses = {
+  xsmall: "text-md",
+  small: "text-lg",
+  medium: "text-xl",
+  large: "text-2xl",
+};
+
+const commonNameSizeClasses = {
+  xsmall: "text-sm",
+  small: "text-base",
+  medium: "text-lg",
+  large: "text-xl",
+};
 
 export interface PlantCardProps {
-  plant: Plant;
+  ownedPlant: TOwnedPlant;
+  size?: "xsmall" | "small" | "medium" | "large";
 }
-export default function PlantCard({ plant }: PlantCardProps) {
+
+export default function PlantCard({
+  ownedPlant,
+  size = "small",
+}: PlantCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const plant = ownedPlant.plant;
+  const sizeClass = cardSizeClasses[size];
+  const paddingClass = cardSizeClassesPadding[size];
+  const textSizeClass = textSizeClasses[size];
+  const commonNameSizeClass = commonNameSizeClasses[size];
+  const plantBasicInfo = useCallback(
+    () => <PlantBasicInfo plant={plant} size={size} />,
+    [plant, size]
+  );
+  const plantPersonalInfo = useCallback(
+    () => <OwnedPlantInfo ownedPlant={ownedPlant} />,
+    []
+  );
+
+  const handleImageClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="max-w-sm rounded-lg  bg-green shadow-md m-2 border-light-brown border-2">
-      <img
-        className="h-64 w-full rounded-t-lg object-none"
-        src={plant.img ? plant.img : plantimg}
-        alt=""
-      />
-      <div className="p-5">
-        <h5 className="text-2xl font-bold tracking-tight text-text-green">
-          {plant.name}
-        </h5>
-        {plant.commonName && (
-          <h5 className="mb-2 text-xl font-normal tracking-tight text-text-green">
-            {plant.commonName}
+    <>
+      <div
+        className={`rounded-lg bg-green shadow-md m-2 border-light-brown border-2 ${sizeClass}`}
+      >
+        <img
+          className="h-64 w-full rounded-t-lg object-cover cursor-pointer"
+          src={plant.img ? plant.img : plantimg}
+          alt={plant.name}
+          onClick={handleImageClick}
+        />
+        <div className={`rounded-b-lg ${paddingClass}`}>
+          <h5
+            className={`font-bold tracking-tight text-text-green ${textSizeClass}`}
+          >
+            {plant.name}
           </h5>
-        )}
-        <div className="flex items-center justify-center">
-          <div className="bg-lightgreen p-4 rounded-lg shadow-md">
-            {plant.lightTolerated && (
-              <PlantProp
-                name={"Light tolerated"}
-                value={plant.lightTolerated.split("(")[0]}
-              />
-            )}
-            {plant.lightIdeal && (
-              <PlantProp
-                name={"Light ideal"}
-                value={plant.lightIdeal.split("(")[0]}
-              />
-            )}
-            {plant.watering && (
-              <PlantProp name={"Watering"} value={plant.watering} />
-            )}
-          </div>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <div className="my-3">
-            <div className="bg-lightgreen p-4 rounded-lg shadow-md">
-              {plant.climat && (
-                <PlantProp name={"Climat"} value={plant.climat} />
-              )}
-              {plant.availability && (
-                <PlantProp name={"Avaliability"} value={plant.availability} />
-              )}
-            </div>
-          </div>
-          <div className="my-3 ml-12">
-            <div className=" bg-lightgreen p-4 rounded-lg shadow-md">
-              <p className="text-text-green font-bold">Temperature</p>
-              <div className="flex items-center justify-between mt-2">
-                <p className="text-lg text-text-green font-semibold w-full text-center">
-                  {12} - {31}&#176;C
-                </p>
-              </div>
-            </div>
-          </div>
+          {plant.commonName && (
+            <h5
+              className={`mb-2 font-normal tracking-tight text-text-green ${commonNameSizeClass}`}
+            >
+              {plant.commonName}
+            </h5>
+          )}
+          <Carousel
+            components={[plantBasicInfo, plantPersonalInfo]}
+            size={size}
+          />
         </div>
       </div>
-    </div>
+
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={handleCloseModal}
+        >
+          <div className="relative bg-white p-4 rounded-lg">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={handleCloseModal}
+            >
+              &times;
+            </button>
+            <img
+              className="max-h-screen max-w-full object-cover"
+              src={plant.img ? plant.img : plantimg}
+              alt={plant.name}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
