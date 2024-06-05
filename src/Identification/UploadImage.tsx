@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Plant } from "../types/plants";
+import { TPlant } from "../types/plants";
 
 export default function UploadImage() {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [plantInfo, setPlantInfo] = useState<Plant | null>(null);
+  const [plantInfo, setPlantInfo] = useState<TPlant | null>(null);
   const [img, setImg] = useState<string | null>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
