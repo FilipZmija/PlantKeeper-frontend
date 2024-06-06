@@ -3,16 +3,18 @@ import UploadImage from "../Identification/UploadImage";
 import PlantCard from "./PlantCard";
 import Carousel from "./Carousel";
 import { TOwnedPlant } from "../types/plants";
+import { getDate } from "../helpers/date";
 
 export default function MainView() {
   const ownedPlant: TOwnedPlant = {
     id: 1,
     name: "Yucca elephantipes",
-    commonName: null,
-    lastWatered: null,
-    lastTransplanted: null,
-    soliMoisture: null,
-    desiredMoisture: null,
+    commonName: "Spineless yucca, Palm lily",
+    lastWatered: getDate(-5).toString(),
+    lastTransplanted: getDate(-5).toString(),
+    lastFertilized: getDate(-10).toString(),
+    soliMoisture: 200,
+    desiredMoisture: 100,
     wateringType: "off",
     plantId: 44,
     image:

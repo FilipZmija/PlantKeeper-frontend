@@ -7,9 +7,9 @@ import OwnedPlantInfo from "./OwnedPlantInfo";
 
 const cardSizeClasses = {
   xsmall: "max-w-56",
-  small: "max-w-72",
-  medium: "max-w-xs",
-  large: "max-w-sm",
+  small: "max-w-xs",
+  medium: "max-w-sm",
+  large: "max-w-md",
 };
 
 const cardSizeClassesPadding = {
@@ -33,6 +33,19 @@ const commonNameSizeClasses = {
   large: "text-xl",
 };
 
+const infoSizeClasses = {
+  xsmall: "text-xs",
+  small: "text-xs",
+  medium: "text-sm",
+  large: "text-base",
+};
+const infoSizeClassesPadding = {
+  xsmall: "p-1 text-xs",
+  small: "p-2 text-xs",
+  medium: "p-2 text-sm",
+  large: "p-3 text-base",
+};
+
 export interface PlantCardProps {
   ownedPlant: TOwnedPlant;
   size?: "xsmall" | "small" | "medium" | "large";
@@ -48,13 +61,28 @@ export default function PlantCard({
   const paddingClass = cardSizeClassesPadding[size];
   const textSizeClass = textSizeClasses[size];
   const commonNameSizeClass = commonNameSizeClasses[size];
+  const infoSizeClass = infoSizeClasses[size];
+  const infoSizeClassPadding = infoSizeClassesPadding[size];
+
   const plantBasicInfo = useCallback(
-    () => <PlantBasicInfo plant={plant} size={size} />,
-    [plant, size]
+    () => (
+      <PlantBasicInfo
+        plant={plant}
+        sizeClass={infoSizeClass}
+        sizeClassPadding={infoSizeClassPadding}
+      />
+    ),
+    [plant, sizeClass, cardSizeClassesPadding]
   );
   const plantPersonalInfo = useCallback(
-    () => <OwnedPlantInfo ownedPlant={ownedPlant} />,
-    []
+    () => (
+      <OwnedPlantInfo
+        ownedPlant={ownedPlant}
+        sizeClass={infoSizeClass}
+        sizeClassPadding={infoSizeClassPadding}
+      />
+    ),
+    [plant, sizeClass, cardSizeClassesPadding]
   );
 
   const handleImageClick = () => {
@@ -72,7 +100,7 @@ export default function PlantCard({
       >
         <img
           className="h-64 w-full rounded-t-lg object-cover cursor-pointer"
-          src={plant.img ? plant.img : plantimg}
+          src={ownedPlant.image ? ownedPlant.image : plantimg}
           alt={plant.name}
           onClick={handleImageClick}
         />
@@ -110,7 +138,7 @@ export default function PlantCard({
             </button>
             <img
               className="max-h-screen max-w-full object-cover"
-              src={plant.img ? plant.img : plantimg}
+              src={ownedPlant.image ? ownedPlant.image : plantimg}
               alt={plant.name}
             />
           </div>

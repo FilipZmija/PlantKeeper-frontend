@@ -19,8 +19,9 @@ export type TOwnedPlant = {
   commonName: string | null;
   lastWatered: string | null;
   lastTransplanted: string | null;
-  soliMoisture: string | null;
-  desiredMoisture: string | null;
+  lastFertilized: string | null;
+  soliMoisture: number | null;
+  desiredMoisture: number | null;
   wateringType: string;
   plantId: number;
   image: string;

@@ -1,7 +1,7 @@
 import React from "react";
 
 type TPlantInfoContainerProps = {
-  ChildComponent: React.FC;
+  ChildComponent: React.FC<any>;
   sizeClass?: string;
   sizeClassPadding?: string;
 };
@@ -11,7 +11,7 @@ export default function PlantInfoContainer({
   ChildComponent,
 }: TPlantInfoContainerProps) {
   return (
-    <div className={`my-1 ${sizeClass}`}>
+    <div className={`my-1 mx-1 ${sizeClass}`}>
       <div
         className={`bg-lightgreen rounded-lg shadow-md  ${sizeClassPadding}`}
       >

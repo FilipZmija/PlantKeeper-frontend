@@ -3,29 +3,15 @@ import PlantProp from "./PlantProp";
 import { TPlant } from "../types/plants";
 import PlantInfoContainer from "./PlantInfoContainer";
 
-const sizeClasses = {
-  xsmall: "text-xs",
-  small: "text-xs",
-  medium: "text-sm",
-  large: "text-base",
-};
-const sizeClassesPadding = {
-  xsmall: "p-1 text-xs",
-  small: "p-2 text-xs",
-  medium: "p-2 text-sm",
-  large: "p-3 text-base",
-};
-
 export default function PlantBasicInfo({
   plant,
-  size = "small",
+  sizeClass,
+  sizeClassPadding,
 }: {
   plant: TPlant;
-  size?: "xsmall" | "small" | "medium" | "large";
+  sizeClass: string;
+  sizeClassPadding: string;
 }) {
-  const sizeClass = sizeClasses[size];
-  const sizeClassPadding = sizeClassesPadding[size];
-
   const PlantClimatInfo: React.FC = () => (
     <>
       {plant.climat && <PlantProp name={"Climat"} value={plant.climat} />}
@@ -39,7 +25,7 @@ export default function PlantBasicInfo({
       <p className="text-text-green font-bold">Temperature</p>
       <div className="flex items-center justify-between mt-2">
         <p
-          className={`${sizeClasses} text-text-green font-semibold w-full text-center`}
+          className={`${"s"} text-text-green font-semibold w-full text-center`}
         >
           {12} - {31}&#176;C
         </p>
