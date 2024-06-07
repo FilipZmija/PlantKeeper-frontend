@@ -1,7 +1,7 @@
 import React from "react";
 import UploadImage from "../Identification/UploadImage";
 import PlantCard from "./PlantCard";
-import Carousel from "./Carousel";
+import Carousel from "./Reusable/Carousel";
 import { TOwnedPlant } from "../types/plants";
 import { getDate } from "../helpers/date";
 

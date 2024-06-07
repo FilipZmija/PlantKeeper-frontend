@@ -21,6 +21,10 @@ module.exports = {
         "light-grey": "#F2F1EB",
         "text-green": "#1A4D2E",
       },
+      transitionProperty: {
+        "min-w": "min-width",
+        "min-h": "min-height",
+      },
     },
   },
   plugins: [],
