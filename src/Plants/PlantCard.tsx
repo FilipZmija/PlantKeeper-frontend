@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from "react";
-import plantimg from "./img.jpg";
 import { TOwnedPlant } from "../types/plants";
-import Carousel from "./Carousel";
-import PlantBasicInfo from "./PlantBasicInfo";
-import OwnedPlantInfo from "./OwnedPlantInfo";
+import Carousel from "./Reusable/Carousel";
+import PlantBasicInfo from "./PlantInfos/PlantBasicInfo";
+import OwnedPlantInfo from "./PlantInfos/OwnedPlantInfo";
 
 const cardSizeClasses = {
   xsmall: "max-w-56",
@@ -100,7 +99,7 @@ export default function PlantCard({
       >
         <img
           className="h-64 w-full rounded-t-lg object-cover cursor-pointer"
-          src={ownedPlant.image ? ownedPlant.image : plantimg}
+          src={ownedPlant.image}
           alt={plant.name}
           onClick={handleImageClick}
         />
@@ -138,7 +137,7 @@ export default function PlantCard({
             </button>
             <img
               className="max-h-screen max-w-full object-cover"
-              src={ownedPlant.image ? ownedPlant.image : plantimg}
+              src={ownedPlant.image}
               alt={plant.name}
             />
           </div>

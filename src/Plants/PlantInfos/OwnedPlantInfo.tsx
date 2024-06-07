@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from "react";
-import { TOwnedPlant } from "../types/plants";
-import PlantInfoContainer from "./PlantInfoContainer";
-import PlantProp from "./PlantProp";
-import { dayDifference, displayReadableDate, getDate } from "../helpers/date";
+import { TOwnedPlant } from "../../types/plants";
+import PlantInfoContainer from "../Reusable/PlantInfoContainer";
+import PlantProp from "../Reusable/PlantProp";
+import { dayDifference } from "../../helpers/date";
 import { PlantCareInfo } from "./PlantCareInfo";
 
 type TOwnedPlantInfoProps = {

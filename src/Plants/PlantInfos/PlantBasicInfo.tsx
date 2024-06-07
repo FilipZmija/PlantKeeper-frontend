@@ -1,7 +1,7 @@
 import React from "react";
-import PlantProp from "./PlantProp";
-import { TPlant } from "../types/plants";
-import PlantInfoContainer from "./PlantInfoContainer";
+import PlantProp from "../Reusable/PlantProp";
+import { TPlant } from "../../types/plants";
+import PlantInfoContainer from "../Reusable/PlantInfoContainer";
 
 export default function PlantBasicInfo({
   plant,

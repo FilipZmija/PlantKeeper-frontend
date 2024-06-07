@@ -1,4 +1,4 @@
-import PlantProp from "./PlantProp";
+import PlantProp from "../Reusable/PlantProp";
 
 export type TPlantCareInfoProps = {
   soliMoisture: number | null;
