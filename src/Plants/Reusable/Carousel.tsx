@@ -101,7 +101,9 @@ const Carousel = ({ components, size }: ICarouselProps) => {
         >
           {components.map((Component, index) => (
             <div key={index} className="w-full flex-shrink-0">
-              <div className="flex flex-col items-center justify-center min-h-24">
+              <div
+                className={`flex flex-col h-full flex-nowrap justify-between content-between min-h-24`}
+              >
                 <Component />
               </div>
             </div>
