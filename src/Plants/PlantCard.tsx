@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { TOwnedPlant } from "../types/plants";
 import Carousel from "./Reusable/Carousel";
 import PlantBasicInfo from "./PlantInfos/PlantBasicInfo";
 import OwnedPlantInfo from "./PlantInfos/OwnedPlantInfo";
+import { useAppSelector } from "../redux/hooks";
 
 const cardSizeClasses = {
   xsmall: "max-w-56",
@@ -46,16 +46,18 @@ const infoSizeClassesPadding = {
 };
 
 export interface PlantCardProps {
-  ownedPlant: TOwnedPlant;
+  plantIndex: number;
   size?: "xsmall" | "small" | "medium" | "large";
 }
 
 export default function PlantCard({
-  ownedPlant,
   size = "small",
+  plantIndex,
 }: PlantCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const plant = ownedPlant.plant;
+  const { plant, image } = useAppSelector(
+    (state) => state.ownedPlant.ownedPlants[plantIndex]
+  );
   const sizeClass = cardSizeClasses[size];
   const paddingClass = cardSizeClassesPadding[size];
   const textSizeClass = textSizeClasses[size];
@@ -66,44 +68,45 @@ export default function PlantCard({
   const plantBasicInfo = useCallback(
     () => (
       <PlantBasicInfo
-        plant={plant}
+        plantIndex={plantIndex}
         sizeClass={infoSizeClass}
         sizeClassPadding={infoSizeClassPadding}
       />
     ),
-    [plant, sizeClass, cardSizeClassesPadding]
+    [plantIndex, infoSizeClass, infoSizeClassPadding]
   );
+
   const plantPersonalInfo = useCallback(
     () => (
       <OwnedPlantInfo
-        ownedPlant={ownedPlant}
+        plantIndex={plantIndex}
         sizeClass={infoSizeClass}
         sizeClassPadding={infoSizeClassPadding}
       />
     ),
-    [plant, sizeClass, cardSizeClassesPadding]
+    [plantIndex, infoSizeClass, infoSizeClassPadding]
   );
 
   const handleImageClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setIsModalOpen((prev) => !prev);
   };
 
   return (
     <>
       <div
-        className={`rounded-lg bg-green shadow-md m-2 border-light-brown border-2 ${sizeClass}`}
+        className={`rounded-lg bg-green shadow-md m-2 border-light-brown border-2 ${sizeClass} h-fit`}
       >
         <img
-          className="h-64 w-full rounded-t-lg object-cover cursor-pointer"
-          src={ownedPlant.image}
+          className={` transition-height duration-300 xs:h-${
+            isModalOpen ? 96 : 72
+          } md:h-${
+            isModalOpen ? 96 : 36
+          } w-full rounded-t-lg object-cover cursor-pointer`}
+          src={image}
           alt={plant.name}
           onClick={handleImageClick}
         />
-        <div className={`rounded-b-lg ${paddingClass}`}>
+        <div className={`rounded-b-lg ${paddingClass} min-h-60`}>
           <h5
             className={`font-bold tracking-tight text-text-green ${textSizeClass}`}
           >
@@ -123,7 +126,7 @@ export default function PlantCard({
         </div>
       </div>
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleCloseModal}
@@ -137,12 +140,12 @@ export default function PlantCard({
             </button>
             <img
               className="max-h-screen max-w-full object-cover"
-              src={ownedPlant.image}
+              src={image}
               alt={plant.name}
             />
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

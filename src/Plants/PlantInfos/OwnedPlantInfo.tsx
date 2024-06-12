@@ -1,113 +1,66 @@
-import React, { useCallback, useEffect } from "react";
-import { TOwnedPlant } from "../../types/plants";
+import React, { useCallback } from "react";
 import PlantInfoContainer from "../Reusable/PlantInfoContainer";
-import PlantProp from "../Reusable/PlantProp";
-import { dayDifference } from "../../helpers/date";
-import { PlantCareInfo } from "./PlantCareInfo";
+import { useAppSelector } from "../../redux/hooks";
+import PlantWatetringInfoComponent from "./OwnedPlant/PlantWatetringInfoComponent";
+import PlantTransplantedInfoComponent from "./OwnedPlant/PlantTransplantingInfoComponent";
+import PlantCareInfoComponent from "./OwnedPlant/PlantCareInfoComponent";
 
 type TOwnedPlantInfoProps = {
-  ownedPlant: TOwnedPlant;
+  plantIndex: number;
   sizeClass: string;
   sizeClassPadding: string;
 };
 
 export default function OwnedPlantInfo({
-  ownedPlant,
+  plantIndex,
   sizeClass,
   sizeClassPadding,
 }: TOwnedPlantInfoProps) {
-  const [editMode, setEditMode] = React.useState<number | null>(null);
-
-  const PlantWateringInfo: React.FC<number> = useCallback(
-    (index) => (
-      <div className="flex justify-center flex-col">
-        {ownedPlant.wateringType && (
-          <PlantProp name={"Auto watering"} value={ownedPlant.wateringType} />
-        )}
-        {ownedPlant.lastWatered && (
-          <PlantProp
-            name={"Watered"}
-            value={
-              dayDifference(new Date(ownedPlant.lastWatered)) + " days ago"
-            }
-          />
-        )}
-        <button
-          onClick={() => setEditMode(index)}
-          className="text-text-green font-bold hover:bg-green bg-green bg-opacity-55 px-3 py-0.5 rounded-sm active:scale-95"
-        >
-          LOG
-        </button>
-      </div>
-    ),
-    [ownedPlant.lastWatered, ownedPlant.wateringType, editMode, setEditMode]
+  const ownedPlant = useAppSelector(
+    (state) => state.ownedPlant.ownedPlants[plantIndex]
+  );
+  const { inEdit, inEditIndex, animClassSelected } = useAppSelector(
+    (state) => state.ownedPlant.editMode[plantIndex]
+  );
+  const xd = useAppSelector((state) => state.ownedPlant.editMode[plantIndex]);
+  console.log(xd);
+  const PlantCare = useCallback(
+    () => <PlantCareInfoComponent plantIndex={plantIndex} />,
+    [plantIndex]
   );
 
-  const PlantTransplantedInfo: React.FC<number> = useCallback(
-    (index) => (
-      <div className="flex justify-center flex-col">
-        {ownedPlant.lastTransplanted && (
-          <PlantProp
-            name={"Transplanted"}
-            value={
-              dayDifference(new Date(ownedPlant.lastTransplanted)) + " days ago"
-            }
-          />
-        )}
-        {ownedPlant.lastFertilized && (
-          <PlantProp
-            name={"Fertalized"}
-            value={
-              dayDifference(new Date(ownedPlant.lastFertilized)) + " days ago"
-            }
-          />
-        )}
-        <button
-          onClick={() => setEditMode(index)}
-          className="text-text-green font-bold hover:bg-green bg-green bg-opacity-55 px-3 py-0.5 rounded-md active:scale-95"
-        >
-          LOG
-        </button>
-      </div>
-    ),
-    [
-      ownedPlant.lastFertilized,
-      ownedPlant.lastTransplanted,
-      editMode,
-      setEditMode,
-    ]
+  const PlantWatering = useCallback(
+    () => <PlantWatetringInfoComponent plantIndex={plantIndex} />,
+    [plantIndex]
   );
 
+  const PlantTransplanted = useCallback(
+    () => <PlantTransplantedInfoComponent plantIndex={plantIndex} />,
+    [plantIndex]
+  );
+  console.log(inEdit);
   return (
     <>
-      <div className="flex flex-row space-x-2">
-        {(!editMode || editMode === 1) && (
+      <div className={`flex flex-row w-full px-1 ${animClassSelected}`}>
+        {(inEditIndex === 1 || !inEdit) && (
           <PlantInfoContainer
-            ChildComponent={() => (
-              <PlantCareInfo
-                desiredMoisture={ownedPlant.desiredMoisture}
-                soliMoisture={ownedPlant.soliMoisture}
-              />
-            )}
+            ChildComponent={PlantCare}
             sizeClass={sizeClass}
             sizeClassPadding={sizeClassPadding}
           />
         )}
-        {(!editMode || editMode === 2) && (
+        {(inEditIndex === 2 || !inEdit) && (
           <PlantInfoContainer
-            ChildComponent={() => PlantWateringInfo(2)}
+            ChildComponent={PlantWatering}
             sizeClass={sizeClass}
             sizeClassPadding={sizeClassPadding}
           />
         )}
       </div>
-      <div
-        className="flex flex-row space-x-2 justify-center
-      "
-      >
-        {(!editMode || editMode === 3) && (
+      <div className="flex flex-row space-x-2 justify-center">
+        {(inEditIndex === 3 || !inEdit) && (
           <PlantInfoContainer
-            ChildComponent={() => PlantTransplantedInfo(3)}
+            ChildComponent={PlantTransplanted}
             sizeClass={sizeClass}
             sizeClassPadding={sizeClassPadding}
           />
