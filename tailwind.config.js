@@ -1,5 +1,3 @@
-const { red, grey } = require("@mui/material/colors");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -8,6 +6,16 @@ module.exports = {
       center: true,
     },
     extend: {
+      screens: { xs: "300px" },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.2s ease-in",
+      },
       fontFamily: {
         sans: ["Roboto", "ui-sans-serif", "system-ui"],
       },
@@ -24,6 +32,7 @@ module.exports = {
       transitionProperty: {
         "min-w": "min-width",
         "min-h": "min-height",
+        opacity: "opacity",
       },
     },
   },
