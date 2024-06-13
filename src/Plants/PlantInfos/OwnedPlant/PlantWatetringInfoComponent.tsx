@@ -1,8 +1,11 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { EditablePlantInfo } from "./PlantEditableCell";
 import PlantProp from "../../Reusable/PlantProp";
 import { dayDifference } from "../../../helpers/date";
 import { useAppSelector } from "../../../redux/hooks";
+import PlantEditableProp from "../../Reusable/PlantEditableProp";
+import WateredChart from "./WateredChart";
+import SelectDropdown from "../../Reusable/DropDown";
 
 type TPlantWatetringInfoComponent = {
   index?: number;
@@ -19,18 +22,50 @@ export default function PlantWatetringInfoComponent({
 
   const PlantWateringComponent = (mode: string) => {
     return mode !== "basic" ? (
-      <div>hej edit me</div>
+      <>
+        <WateredChart />
+
+        {mode === "edit" ? (
+          <div className="flex flex-col">
+            <PlantEditableProp
+              name={"Auto watering"}
+              Input={
+                <SelectDropdown
+                  options={["off", "After time", "Below moisture"]}
+                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                    console.log(event);
+                  }}
+                  defaultValue={"off"}
+                />
+              }
+            />
+            <PlantEditableProp name={"Watered"} Input={<div></div>} />
+          </div>
+        ) : (
+          <>
+            <PlantProp name={"Auto watering"} value={wateringType} />
+            <PlantProp
+              name={"Watered"}
+              value={
+                lastWatered
+                  ? dayDifference(new Date(lastWatered)) + " days ago"
+                  : "Never"
+              }
+            />
+          </>
+        )}
+      </>
     ) : (
       <>
-        {wateringType && (
-          <PlantProp name={"Auto watering"} value={wateringType} />
-        )}
-        {lastWatered && (
-          <PlantProp
-            name={"Watered"}
-            value={dayDifference(new Date(lastWatered)) + " days ago"}
-          />
-        )}
+        <PlantProp name={"Auto watering"} value={wateringType} />
+        <PlantProp
+          name={"Watered"}
+          value={
+            lastWatered
+              ? dayDifference(new Date(lastWatered)) + " days ago"
+              : "Never"
+          }
+        />
       </>
     );
   };
