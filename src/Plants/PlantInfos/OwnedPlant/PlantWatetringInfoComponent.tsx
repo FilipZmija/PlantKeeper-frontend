@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import PlantEditableProp from "../../Reusable/PlantEditableProp";
 import WateredChart from "./WateredChart";
 import SelectDropdown from "../../Reusable/DropDown";
+import MyDatePicker from "../../Reusable/Datepicker";
 
 type TPlantWatetringInfoComponent = {
   index?: number;
@@ -24,7 +25,6 @@ export default function PlantWatetringInfoComponent({
     return mode !== "basic" ? (
       <>
         <WateredChart />
-
         {mode === "edit" ? (
           <div className="flex flex-col">
             <PlantEditableProp
@@ -39,7 +39,7 @@ export default function PlantWatetringInfoComponent({
                 />
               }
             />
-            <PlantEditableProp name={"Watered"} Input={<div></div>} />
+            <PlantEditableProp name={"Watered"} Input={<MyDatePicker />} />
           </div>
         ) : (
           <>
