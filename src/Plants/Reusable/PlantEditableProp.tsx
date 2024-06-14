@@ -8,7 +8,7 @@ export default function PlantEditableProp({
   Input: ReactNode;
 }) {
   return (
-    <div className="flex flex-row space-x-1 w-full">
+    <div className="flex flex-row space-x-1 w-full pb-0.5">
       {name && <h5 className={`font-bold text-text-green`}>{name}:</h5>}
       {Input}
     </div>
