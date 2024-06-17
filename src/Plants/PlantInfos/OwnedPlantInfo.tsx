@@ -16,14 +16,9 @@ export default function OwnedPlantInfo({
   sizeClass,
   sizeClassPadding,
 }: TOwnedPlantInfoProps) {
-  const ownedPlant = useAppSelector(
-    (state) => state.ownedPlant.ownedPlants[plantIndex]
-  );
   const { inEdit, inEditIndex, animClassSelected } = useAppSelector(
     (state) => state.ownedPlant.editMode[plantIndex]
   );
-  const xd = useAppSelector((state) => state.ownedPlant.editMode[plantIndex]);
-  console.log(xd);
   const PlantCare = useCallback(
     () => <PlantCareInfoComponent plantIndex={plantIndex} />,
     [plantIndex]
@@ -38,7 +33,6 @@ export default function OwnedPlantInfo({
     () => <PlantTransplantedInfoComponent plantIndex={plantIndex} />,
     [plantIndex]
   );
-  console.log(inEdit);
   return (
     <>
       <div className={`flex flex-row w-full px-1 ${animClassSelected}`}>
