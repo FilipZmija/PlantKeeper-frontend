@@ -4,12 +4,22 @@ import PlantProp from "../../Reusable/PlantProp";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { editOwnedPlant } from "../../../redux/ownedPlantSlice";
 import PlantEditableProp from "../../Reusable/PlantEditableProp";
-import MyChart from "./Chart";
+import LineChart from "./LineChart";
+import { getDate } from "../../../helpers/date";
 
 type TPlantCareInfoComponent = {
   plantIndex: number;
   index?: number;
 };
+const data = [
+  { name: getDate(-6).getTime(), pv: 24 },
+  { name: getDate(-5).getTime(), pv: 13 },
+  { name: getDate(-4).getTime(), pv: 10 },
+  { name: getDate(-3).getTime(), pv: 39 },
+  { name: getDate(-2).getTime(), pv: 48 },
+  { name: getDate(-1).getTime(), pv: 38 },
+  { name: getDate(0).getTime(), pv: 43 },
+];
 
 export default function PlantCareInfoComponent({
   plantIndex,
@@ -39,15 +49,16 @@ export default function PlantCareInfoComponent({
       <>
         {mode !== "basic" ? (
           <>
-            <MyChart />
+            <LineChart data={data} />
             {mode === "edit" ? (
-              <div className="flex flex-col pb-2">
+              <div className="flex flex-col">
                 <PlantProp
-                  name={"Soil moisture"}
+                  name={"Moisture"}
                   value={soliMoisture ? soliMoisture : "N/A"}
                 />
+
                 <PlantEditableProp
-                  name={"Desired moisture"}
+                  name={"Expected moisture"}
                   Input={
                     <input
                       onChange={handleChange}
@@ -60,26 +71,28 @@ export default function PlantCareInfoComponent({
                 />
               </div>
             ) : (
-              <div className="pb-2">
+              <div className="space-y-0.5">
                 <PlantProp
-                  name={"Soil moisture"}
+                  name={"Moisture"}
                   value={soliMoisture ? soliMoisture : "N/A"}
                 />
-                <PlantProp
-                  name={"Desired moisture"}
-                  value={desiredMoisture ? desiredMoisture : "N/A"}
-                />
+                <div className="pb-1">
+                  <PlantProp
+                    name={"Expected moisture"}
+                    value={desiredMoisture ? desiredMoisture : "N/A"}
+                  />
+                </div>
               </div>
             )}
           </>
         ) : (
           <>
             <PlantProp
-              name={"Soil moisture"}
+              name={"Moisture"}
               value={soliMoisture ? soliMoisture : "N/A"}
             />
             <PlantProp
-              name={"Desired moisture"}
+              name={"Exp. moisture"}
               value={desiredMoisture ? desiredMoisture : "N/A"}
             />
           </>
