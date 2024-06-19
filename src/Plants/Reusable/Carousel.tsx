@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 export interface ICarouselProps {
@@ -19,6 +19,32 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   const [showComponentIndex, setShowComponentIndex] = useState<number | null>(
     null
   );
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ref.current?.addEventListener("mouseenter", (e) => {
+      const { title } = e.target as HTMLElement;
+      if (title === "now-displayed") {
+        setIsMouseOver(true);
+      }
+    });
+    ref.current?.addEventListener("mouseleave", (e) => {
+      const { title } = e.target as HTMLElement;
+      if (title === "now-displayed") {
+        setIsMouseOver(false);
+      }
+    });
+    return () => {
+      ref.current?.removeEventListener("mouseenter", () => {
+        setIsMouseOver(false);
+      });
+      ref.current?.removeEventListener("mouseleave", () => {
+        setIsMouseOver(false);
+      });
+    };
+  }, [showComponentIndex]);
 
   useEffect(() => {
     setIsAnimating(true);
@@ -118,7 +144,7 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   return (
     <div
       className={`${
-        isAnimating ? "overflow-hidden" : "overflow-visible"
+        !isMouseOver ? "overflow-hidden" : "overflow-visible"
       } relative w-full max-w-xl mx-auto bg-inherit`}
     >
       <div
@@ -136,6 +162,10 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
           >
             <div
               className={`flex flex-col h-full flex-nowrap justify-between content-between min-h-24`}
+              title={`${
+                index === showComponentIndex ? "now-displayed" : "hidden"
+              }`}
+              ref={ref}
             >
               <Component />
             </div>

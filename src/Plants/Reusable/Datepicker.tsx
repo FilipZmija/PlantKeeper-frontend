@@ -3,8 +3,14 @@ import DatePicker, { CalendarContainer } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import styles
 import "./Datepicker.css";
 import { getDate } from "../../helpers/date";
-const MyDatePicker = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+type TMyDatePicker = {
+  onChange: (event: Date | null) => void;
+  onLog: () => void;
+  value: Date | null;
+};
+
+const MyDatePicker = ({ onChange, value, onLog }: TMyDatePicker) => {
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
   );
@@ -18,15 +24,15 @@ const MyDatePicker = () => {
     return (
       <>
         <CalendarContainer className={`${className}`}>
-          <div style={{ position: "relative" }}>{children}</div>
+          <div>{children}</div>
         </CalendarContainer>
       </>
     );
   };
   return (
-    <div className="relative">
+    <div className="flex flex-row">
       <DatePicker
-        selected={selectedDate}
+        selected={value}
         renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => {
           setCurrentMonth(monthDate.getMonth());
           return (
@@ -75,14 +81,20 @@ const MyDatePicker = () => {
           );
         }}
         calendarClassName="bg-lightest-green"
-        onChange={(date) => setSelectedDate(date)}
+        onChange={(date) => onChange(date)}
         calendarContainer={MyContainer}
-        className="px-1 block w-7/12 bg-light-mint outline-none text-text-green border border-green rounded-lg text-xs focus:ring-text-green focus:ring-1 focus:border-text-green"
+        className="px-1 w-11/12 bg-light-mint outline-none text-text-green border border-green rounded-lg text-xs focus:ring-text-green focus:ring-1 focus:border-text-green"
         excludeDateIntervals={[{ start: getDate(0), end: getDate(31) }]}
         renderDayContents={(day, month) => {
           return month.getMonth() !== currentMonth ? null : day;
         }}
       />
+      <button
+        onClick={onLog}
+        className="text-text-green font-bold hover:bg-green bg-green bg-opacity-55 px-1.5  rounded-full active:scale-95"
+      >
+        +
+      </button>
     </div>
   );
 };
