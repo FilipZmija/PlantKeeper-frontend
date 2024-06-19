@@ -29,7 +29,7 @@ const ownedPlantSlice = createSlice({
       state,
       action: PayloadAction<{
         key: keyof TOwnedPlant;
-        value: string | number;
+        value: string | number | null;
         id: number;
       }>
     ) => {
