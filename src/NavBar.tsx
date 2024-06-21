@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "./redux/authSlice";
 import icon from "./icon1.png";
-import { Avatar } from "@mui/material";
 import { useAppSelector } from "./redux/hooks";
 const navigation = [
   { name: "My plants", href: "" },
@@ -96,7 +95,7 @@ export default function NavBar() {
                       <MenuItem>
                         {({ focus }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(
                               focus ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"

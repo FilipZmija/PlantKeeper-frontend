@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+
 export interface ICarouselProps {
   components: (() => JSX.Element)[];
   size: "xsmall" | "small" | "medium" | "large";
+  showButtons?: boolean;
 }
+
 interface IButtonProps {
   onClick: () => void;
   size: "xsmall" | "small" | "medium" | "large";
   prev: boolean;
 }
-const Carousel = ({ components, size }: ICarouselProps) => {
+
+const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showComponentIndex, setShowComponentIndex] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    setIsAnimating(true);
+    const timeoutId = setTimeout(() => {
+      setShowComponentIndex(currentIndex);
+    }, 10);
+    const timeoutStop = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+    return () => {
+      clearTimeout(timeoutStop);
+      clearTimeout(timeoutId);
+    };
+  }, [currentIndex]);
 
   const Button = ({ onClick, size, prev }: IButtonProps) => {
     const getSizeClass = () => {
@@ -31,7 +54,7 @@ const Carousel = ({ components, size }: ICarouselProps) => {
       <button
         onClick={onClick}
         type="button"
-        className={`inline-flex items-center justify-center rounded-full bg-dark-green/40 hover:bg-text-green/50  group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none ${getSizeClass()} focus:outline-none`}
+        className={`inline-flex items-center justify-center rounded-full bg-dark-green/40 hover:bg-text-green/50 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none ${getSizeClass()} focus:outline-none`}
       >
         {prev ? (
           <>
@@ -93,37 +116,48 @@ const Carousel = ({ components, size }: ICarouselProps) => {
   };
 
   return (
-    <div className="relative w-full max-w-xl mx-auto bg-inherit">
-      <div className="overflow-hidden max-h-64">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {components.map((Component, index) => (
-            <div key={index} className="w-full flex-shrink-0">
-              <div
-                className={`flex flex-col h-full flex-nowrap justify-between content-between min-h-24`}
-              >
-                <Component />
-              </div>
+    <div
+      className={`${
+        isAnimating ? "overflow-hidden" : "overflow-visible"
+      } relative w-full max-w-xl mx-auto bg-inherit`}
+    >
+      <div
+        className={`flex transition-transform duration-500 ease-in-out`}
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {components.map((Component, index) => (
+          <div
+            key={index}
+            className={`${
+              isAnimating || index === showComponentIndex
+                ? "opacity-100"
+                : "opacity-0"
+            } w-full flex-shrink-0`}
+          >
+            <div
+              className={`flex flex-col h-full flex-nowrap justify-between content-between min-h-24`}
+            >
+              <Component />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
       <div
-        className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out"
+        className={`${
+          !showButtons ? "hidden" : "flex"
+        } absolute top-0 left-0 z-30 items-center justify-center h-full px-4 cursor-pointer group focus:outline-none opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out`}
         data-carousel-prev
       >
         <Button onClick={prevSlide} size={size} prev={true} />
       </div>
-
-      <button
-        type="button"
-        className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out"
+      <div
+        className={`${
+          !showButtons ? "hidden" : "flex"
+        } absolute top-0 right-0 z-30 items-center justify-center h-full px-4 cursor-pointer group focus:outline-none opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out`}
         data-carousel-next
       >
         <Button onClick={nextSlide} size={size} prev={false} />
-      </button>
+      </div>
       <div className="left-0 right-0 bottom-0 flex justify-center">
         {components.map((_, index) => (
           <button

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import Login from "./Auth/Login";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
@@ -33,7 +33,7 @@ export default function App() {
         }
       })();
     else setLoading(false);
-  }, []);
+  }, [dispatch]);
 
   return !loading ? (
     <div className="flex flex-col h-screen">

@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { useAppDispatch } from "../redux/hooks";
 import { ILoginInfo, login } from "../redux/authSlice";
-import { Box, TextField } from "@mui/material";
 import Textfield from "./Textfield";
 
 const Login: React.FC = () => {

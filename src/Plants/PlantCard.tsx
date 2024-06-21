@@ -58,6 +58,9 @@ export default function PlantCard({
   const { plant, image } = useAppSelector(
     (state) => state.ownedPlant.ownedPlants[plantIndex]
   );
+  const { inEdit } = useAppSelector(
+    (state) => state.ownedPlant.editMode[plantIndex]
+  );
   const sizeClass = cardSizeClasses[size];
   const paddingClass = cardSizeClassesPadding[size];
   const textSizeClass = textSizeClasses[size];
@@ -97,10 +100,10 @@ export default function PlantCard({
         className={`rounded-lg bg-green shadow-md m-2 border-light-brown border-2 ${sizeClass} h-fit`}
       >
         <img
-          className={` transition-height duration-300 xs:h-${
-            isModalOpen ? 96 : 72
-          } md:h-${
-            isModalOpen ? 96 : 36
+          className={` transition-height duration-300 ${
+            isModalOpen ? "xs:h-96" : "xs:h-72"
+          } ${
+            isModalOpen ? "md:h-96" : "md:h-36"
           } w-full rounded-t-lg object-cover cursor-pointer`}
           src={image}
           alt={plant.name}
@@ -122,6 +125,7 @@ export default function PlantCard({
           <Carousel
             components={[plantBasicInfo, plantPersonalInfo]}
             size={size}
+            showButtons={!inEdit}
           />
         </div>
       </div>

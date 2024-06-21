@@ -41,7 +41,7 @@ export default function PlantCareInfoComponent({
           <>
             <MyChart />
             {mode === "edit" ? (
-              <div className="flex flex-col">
+              <div className="flex flex-col pb-2">
                 <PlantProp
                   name={"Soil moisture"}
                   value={soliMoisture ? soliMoisture : "N/A"}
@@ -52,12 +52,15 @@ export default function PlantCareInfoComponent({
                     <input
                       onChange={handleChange}
                       value={soilMoisture ? soilMoisture : " "}
+                      type="text"
+                      id="small-input"
+                      className="px-1 block w-3/12 bg-light-mint outline-none text-text-green border border-green rounded-lg text-xs focus:ring-text-green focus:ring-1 focus:border-text-green"
                     />
                   }
                 />
               </div>
             ) : (
-              <>
+              <div className="pb-2">
                 <PlantProp
                   name={"Soil moisture"}
                   value={soliMoisture ? soliMoisture : "N/A"}
@@ -66,7 +69,7 @@ export default function PlantCareInfoComponent({
                   name={"Desired moisture"}
                   value={desiredMoisture ? desiredMoisture : "N/A"}
                 />
-              </>
+              </div>
             )}
           </>
         ) : (

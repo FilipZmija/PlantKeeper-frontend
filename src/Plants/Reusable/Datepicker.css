@@ -1,0 +1,27 @@
+.react-datepicker__header--custom {
+  @apply bg-lightgreen;
+}
+
+span.react-datepicker__navigation-icon::before {
+  @apply border-text-green;
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  @apply border-green;
+}
+
+.react-datepicker__current-month {
+  @apply text-text-green;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-text-green;
+}
+
+.react-datepicker__day:hover {
+  @apply bg-green;
+}
+
+.disabledArrow::before {
+  border-color: gray !important;
+}
