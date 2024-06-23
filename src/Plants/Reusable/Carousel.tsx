@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
 
 export interface ICarouselProps {
   components: (() => JSX.Element)[];
@@ -24,27 +23,28 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.addEventListener("mouseenter", (e) => {
+    const refCurrent = ref.current;
+    refCurrent?.addEventListener("mouseenter", (e) => {
       const { title } = e.target as HTMLElement;
-      if (title === "now-displayed") {
+      if (title === "now-displayed" && !isAnimating) {
         setIsMouseOver(true);
       }
     });
-    ref.current?.addEventListener("mouseleave", (e) => {
+    refCurrent?.addEventListener("mouseleave", (e) => {
       const { title } = e.target as HTMLElement;
-      if (title === "now-displayed") {
+      if (title === "now-displayed" && !isAnimating) {
         setIsMouseOver(false);
       }
     });
     return () => {
-      ref.current?.removeEventListener("mouseenter", () => {
+      refCurrent?.removeEventListener("mouseenter", () => {
         setIsMouseOver(false);
       });
-      ref.current?.removeEventListener("mouseleave", () => {
+      refCurrent?.removeEventListener("mouseleave", () => {
         setIsMouseOver(false);
       });
     };
-  }, [showComponentIndex]);
+  }, [showComponentIndex, isAnimating]);
 
   useEffect(() => {
     setIsAnimating(true);
@@ -144,8 +144,8 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   return (
     <div
       className={`${
-        !isMouseOver ? "overflow-hidden" : "overflow-visible"
-      } relative w-full max-w-xl mx-auto bg-inherit`}
+        isMouseOver && !isAnimating ? "overflow-visible" : "overflow-hidden"
+      } relative w-full max32-w-xl mx-auto bg-inherit`}
     >
       <div
         className={`flex transition-transform duration-500 ease-in-out`}
