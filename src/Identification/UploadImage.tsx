@@ -1,10 +1,22 @@
 import axios from "axios";
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { StringLiteral } from "typescript";
 
-const UploadImage: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+type TUploadImage = {
+  file: File | null;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  image: string | null;
+  setImage: React.Dispatch<React.SetStateAction<string | null>>;
+  loading: boolean;
+};
 
+const UploadImage: React.FC<TUploadImage> = ({
+  file,
+  setFile,
+  image,
+  setImage,
+  loading,
+}) => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -20,42 +32,10 @@ const UploadImage: React.FC = () => {
     }
   };
 
-  const handleRemoveImage = () => {
-    setImage(null);
-    setFile(null);
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!file) {
-      alert("Please select a file to upload.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/plants/identify`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const plantData = response.data.result[0];
-      console.log(response.data);
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
   return (
     <div
       className={`flex flex-col items-center justify-center transition-all duration-1000 ${
-        image ? "h-96" : "h-48"
+        image ? "h-96 min-w-24" : "h-52 min-w-96"
       }`}
     >
       {!image ? (
@@ -97,14 +77,8 @@ const UploadImage: React.FC = () => {
           <img
             src={image}
             alt="Uploaded"
-            className="rounded-lg max-h-full max-w-full"
+            className="rounded-lg max-h-full max-w-full after:w-24  after:h-24 after:bg-black"
           />
-          <button
-            onClick={handleRemoveImage}
-            className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg"
-          >
-            Remove Image
-          </button>
         </>
       )}
     </div>
