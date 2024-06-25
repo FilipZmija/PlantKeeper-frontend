@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import React, { useEffect, useRef, useState } from "react";
 
 export interface ICarouselProps {
   components: (() => JSX.Element)[];
@@ -19,6 +18,33 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   const [showComponentIndex, setShowComponentIndex] = useState<number | null>(
     null
   );
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const refCurrent = ref.current;
+    refCurrent?.addEventListener("mouseenter", (e) => {
+      const { title } = e.target as HTMLElement;
+      if (title === "now-displayed" && !isAnimating) {
+        setIsMouseOver(true);
+      }
+    });
+    refCurrent?.addEventListener("mouseleave", (e) => {
+      const { title } = e.target as HTMLElement;
+      if (title === "now-displayed" && !isAnimating) {
+        setIsMouseOver(false);
+      }
+    });
+    return () => {
+      refCurrent?.removeEventListener("mouseenter", () => {
+        setIsMouseOver(false);
+      });
+      refCurrent?.removeEventListener("mouseleave", () => {
+        setIsMouseOver(false);
+      });
+    };
+  }, [showComponentIndex, isAnimating]);
 
   useEffect(() => {
     setIsAnimating(true);
@@ -118,8 +144,8 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
   return (
     <div
       className={`${
-        isAnimating ? "overflow-hidden" : "overflow-visible"
-      } relative w-full max-w-xl mx-auto bg-inherit`}
+        isMouseOver && !isAnimating ? "overflow-visible" : "overflow-hidden"
+      } relative w-full max32-w-xl mx-auto bg-inherit`}
     >
       <div
         className={`flex transition-transform duration-500 ease-in-out`}
@@ -136,6 +162,10 @@ const Carousel = ({ components, size, showButtons = true }: ICarouselProps) => {
           >
             <div
               className={`flex flex-col h-full flex-nowrap justify-between content-between min-h-24`}
+              title={`${
+                index === showComponentIndex ? "now-displayed" : "hidden"
+              }`}
+              ref={ref}
             >
               <Component />
             </div>

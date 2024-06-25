@@ -25,3 +25,7 @@ span.react-datepicker__navigation-icon::before {
 .disabledArrow::before {
   border-color: gray !important;
 }
+
+.react-datepicker-wrapper {
+  @apply w-6/12;
+}

@@ -22,5 +22,5 @@ export const displayReadableShortDate = (date: Date) => {
 
 export const dayDifference = (date1: Date, date2 = new Date()) => {
   const difference = date2.getTime() - date1.getTime();
-  return Math.round(difference / (1000 * 3600 * 24));
+  return Math.floor(difference / (1000 * 3600 * 24));
 };
