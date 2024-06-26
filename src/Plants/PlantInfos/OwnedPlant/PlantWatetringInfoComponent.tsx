@@ -1,12 +1,29 @@
 import React from "react";
 import { EditablePlantInfo } from "./PlantEditableCell";
 import PlantProp from "../../Reusable/PlantProp";
-import { dayDifference } from "../../../helpers/date";
-import { useAppSelector } from "../../../redux/hooks";
+import { dayDifference, getDate } from "../../../helpers/date";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import PlantEditableProp from "../../Reusable/PlantEditableProp";
-import WateredChart from "./WateredChart";
+import WateredChart from "./DotChart";
 import SelectDropdown from "../../Reusable/DropDown";
 import MyDatePicker from "../../Reusable/Datepicker";
+import { editOwnedPlant } from "../../../redux/ownedPlantSlice";
+
+const data: Date[] = [
+  getDate(-1231),
+  getDate(-989),
+  getDate(-761),
+  getDate(-526),
+  getDate(-210),
+  getDate(-111),
+  getDate(-7),
+  getDate(-1),
+];
+
+const formattedData = data.map((date) => ({
+  date,
+  watered: 1,
+}));
 
 type TPlantWatetringInfoComponent = {
   index?: number;
@@ -17,35 +34,59 @@ export default function PlantWatetringInfoComponent({
   index = 2,
   plantIndex,
 }: TPlantWatetringInfoComponent) {
+  const dispatch = useAppDispatch();
   const { wateringType, lastWatered, id } = useAppSelector(
     (state) => state.ownedPlant.ownedPlants[plantIndex]
   );
 
   const PlantWateringComponent = (mode: string) => {
     return mode !== "basic" ? (
-      <>
-        <WateredChart />
+      <div>
+        <WateredChart data={formattedData} />
         {mode === "edit" ? (
           <div className="flex flex-col">
             <PlantEditableProp
-              name={"Auto watering"}
+              name={"Watering"}
               Input={
                 <SelectDropdown
-                  options={["off", "After time", "Below moisture"]}
+                  options={["off", "After time", "Moisture"]}
                   onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                    console.log(event);
+                    dispatch(
+                      editOwnedPlant({
+                        key: "wateringType",
+                        value: event.target.value,
+                        id,
+                      })
+                    );
                   }}
-                  defaultValue={"off"}
+                  defaultValue={wateringType}
                 />
               }
             />
-            <PlantEditableProp name={"Watered"} Input={<MyDatePicker />} />
+            <PlantEditableProp
+              name={"Watered"}
+              Input={
+                <MyDatePicker
+                  onChange={(date: Date | null) =>
+                    dispatch(
+                      editOwnedPlant({
+                        key: "lastWatered",
+                        value: date ? date.toDateString() : null,
+                        id,
+                      })
+                    )
+                  }
+                  onLog={() => console.log("log")}
+                  value={lastWatered ? new Date(lastWatered) : null}
+                />
+              }
+            />
           </div>
         ) : (
           <>
-            <PlantProp name={"Auto watering"} value={wateringType} />
+            <PlantProp name={"Watering"} value={wateringType} />
             <PlantProp
-              name={"Watered"}
+              name={"Last watered"}
               value={
                 lastWatered
                   ? dayDifference(new Date(lastWatered)) + " days ago"
@@ -54,10 +95,10 @@ export default function PlantWatetringInfoComponent({
             />
           </>
         )}
-      </>
+      </div>
     ) : (
       <>
-        <PlantProp name={"Auto watering"} value={wateringType} />
+        <PlantProp name={"Watering"} value={wateringType} />
         <PlantProp
           name={"Watered"}
           value={

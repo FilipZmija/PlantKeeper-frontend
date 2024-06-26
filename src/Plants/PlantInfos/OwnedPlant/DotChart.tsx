@@ -19,29 +19,17 @@ type WateredData = {
   watered: number;
 };
 
-const WateredChart: React.FC = () => {
+type TDotChartProps = {
+  data: WateredData[];
+};
+
+const DotChart = ({ data }: TDotChartProps) => {
   const [expanded, setExpanded] = React.useState(false);
   useEffect(() => {
     setExpanded(true);
   }, []);
 
-  const data: Date[] = [
-    getDate(-46),
-    getDate(-36),
-    getDate(-30),
-    getDate(-26),
-    getDate(-19),
-    getDate(-12),
-    getDate(-7),
-    getDate(-1),
-  ];
-
-  const formattedData: WateredData[] = data.map((date) => ({
-    date,
-    watered: 1,
-  }));
-
-  const parsedData = formattedData.map((item) => ({
+  const parsedData = data.map((item) => ({
     date: item.date.getTime(), // Convert to timestamp for charting
     watered: item.watered,
   }));
@@ -83,4 +71,4 @@ const WateredChart: React.FC = () => {
     </div>
   );
 };
-export default WateredChart;
+export default DotChart;

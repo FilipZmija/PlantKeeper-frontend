@@ -33,6 +33,10 @@ export default function OwnedPlantInfo({
     () => <PlantTransplantedInfoComponent plantIndex={plantIndex} />,
     [plantIndex]
   );
+  const PlantFertalized = useCallback(
+    () => <PlantTransplantedInfoComponent plantIndex={plantIndex} />,
+    [plantIndex]
+  );
   return (
     <>
       <div className={`flex flex-row w-full px-1 ${animClassSelected}`}>

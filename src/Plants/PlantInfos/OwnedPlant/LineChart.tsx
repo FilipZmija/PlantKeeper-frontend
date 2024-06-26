@@ -15,17 +15,15 @@ import {
   getDate,
 } from "../../../helpers/date";
 
-const data = [
-  { name: getDate(-6).getTime(), pv: 24 },
-  { name: getDate(-5).getTime(), pv: 13 },
-  { name: getDate(-4).getTime(), pv: 98 },
-  { name: getDate(-3).getTime(), pv: 39 },
-  { name: getDate(-2).getTime(), pv: 48 },
-  { name: getDate(-1).getTime(), pv: 38 },
-  { name: getDate(0).getTime(), pv: 43 },
-];
+type TLineData = {
+  name: number;
+  pv: number;
+};
+type TLineChartProps = {
+  data: TLineData[];
+};
 
-const MyChart = () => {
+const MyChart = ({ data }: TLineChartProps) => {
   const [expanded, setExpanded] = React.useState(false);
   useEffect(() => {
     setExpanded(true);
