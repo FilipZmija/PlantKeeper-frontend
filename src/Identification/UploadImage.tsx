@@ -1,5 +1,12 @@
 import axios from "axios";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+} from "react";
+import { set, setTime } from "react-datepicker/dist/date_utils";
 import { StringLiteral } from "typescript";
 
 type TUploadImage = {
@@ -17,20 +24,37 @@ const UploadImage: React.FC<TUploadImage> = ({
   setImage,
   loading,
 }) => {
+  const ref = useRef<HTMLImageElement>(null);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [isPicture, setIsPicture] = useState(false);
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setImage(reader.result as string);
         setFile(selectedFile);
       };
-      console.log(reader);
+
       reader.readAsDataURL(selectedFile);
     } else {
       alert("Please upload a valid image file");
     }
   };
+  useEffect(() => {
+    if (!image) {
+      setTimeout(() => setImageSize({ width: 384, height: 384 }), 100);
+    } else setIsPicture(true);
+    if (ref.current) {
+      setTimeout(() => {
+        setImageSize({
+          width: ref.current?.width ?? 0,
+          height: ref.current?.height ?? 0,
+        });
+      }, 1000);
+    }
+  }, [image]);
 
   return (
     <div
@@ -40,10 +64,13 @@ const UploadImage: React.FC<TUploadImage> = ({
     >
       {!image ? (
         <label
+          style={{
+            width: `${true ? `${imageSize.width + "px"}` : "100%"}`,
+          }}
           htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-green hover:bg-lightgreen transition-all duration-1000"
+          className={`flex flex-col items-center justify-center h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-green hover:bg-lightgreen transition-all duration-1000`}
         >
-          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+          <div className="flex flex-col items-center justify-center pt-5 pb-6 ">
             <svg
               className="w-8 h-8 mb-4 text-text-green"
               aria-hidden="true"
@@ -73,13 +100,21 @@ const UploadImage: React.FC<TUploadImage> = ({
           />
         </label>
       ) : (
-        <>
+        <div className="inline-flex justify-center relative w-full h-full">
           <img
+            ref={ref}
             src={image}
             alt="Uploaded"
-            className="rounded-lg max-h-full max-w-full after:w-24  after:h-24 after:bg-black"
+            className={`rounded-lg max-h-full max-w-full `}
           />
-        </>
+          {loading && (
+            <div className="absolute inset-0 overflow-hidden rounded-lg w-full ">
+              <div className="flex absolute inset-0 after:w-full after:h-2 after:absolute after:bg-text-green after:opacity-100 animate-scan after:shadow-custom-dark ">
+                <div className="bg-text-green opacity-40 w-full h-full mt-2"></div>
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
