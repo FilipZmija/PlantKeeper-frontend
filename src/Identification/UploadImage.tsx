@@ -1,13 +1,4 @@
-import axios from "axios";
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useRef,
-  useEffect,
-} from "react";
-import { set, setTime } from "react-datepicker/dist/date_utils";
-import { StringLiteral } from "typescript";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 
 type TUploadImage = {
   file: File | null;
@@ -25,7 +16,7 @@ const UploadImage: React.FC<TUploadImage> = ({
   loading,
 }) => {
   const ref = useRef<HTMLImageElement>(null);
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [imageSize, setImageSize] = useState({ width: 384, height: 384 });
   const [isPicture, setIsPicture] = useState(false);
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -65,7 +56,7 @@ const UploadImage: React.FC<TUploadImage> = ({
       {!image ? (
         <label
           style={{
-            width: `${true ? `${imageSize.width + "px"}` : "100%"}`,
+            width: ` ${imageSize.width + "px"}`,
           }}
           htmlFor="dropzone-file"
           className={`flex flex-col items-center justify-center h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-green hover:bg-lightgreen transition-all duration-1000`}
