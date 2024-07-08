@@ -1,6 +1,10 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import UploadImage from "./UploadImage";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { set } from "react-datepicker/dist/date_utils";
+import { TPlant } from "../types/plants";
+import PlantCard from "../Plants/PlantCard";
+import IdentifiedPlant from "./IdentifiedPlant";
 
 type ModalProps = {
   isOpen: boolean;
@@ -10,10 +14,23 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [identifiedPlant, setIdentifiedPlant] = useState<TPlant | null>(null);
+  useEffect(() => {
+    setFile(null);
+    setImage(null);
+    setLoading(false);
+    setIdentifiedPlant(null);
+  }, [isOpen]);
+
+  useEffect(() => {
+    setIdentifiedPlant(null);
+  }, [image, file]);
 
   const handleDiscard = () => {
-    setImage(null);
     setFile(null);
+    setImage(null);
+    setLoading(false);
+    setIdentifiedPlant(null);
   };
 
   const handleIdentify = async () => {
@@ -26,16 +43,18 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
     formData.append("image", file);
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/plants/identify`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response: AxiosResponse<{ filename: string; result: TPlant[] }> =
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/plants/identify`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       const plantData = response.data.result[0];
+      setIdentifiedPlant(plantData);
       console.log(response.data);
       console.log(plantData);
     } catch (error: any) {
@@ -44,6 +63,7 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
       setLoading(false);
     }
   };
+
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto overflow-x-hidden bg-gray-900 bg-opacity-40">
       <div className="relative p-4 w-fit max-w-2xl max-h-full">
@@ -79,13 +99,21 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
           </div>
           {/* Modal body */}
           <div className="p-4 md:p-5 space-y-4 w-full flex justify-center">
-            <UploadImage
-              file={file}
-              setFile={setFile}
-              image={image}
-              setImage={setImage}
-              loading={loading}
-            />
+            {identifiedPlant && image ? (
+              <IdentifiedPlant
+                plant={identifiedPlant}
+                image={image as string}
+                size={"small"}
+              />
+            ) : (
+              <UploadImage
+                file={file}
+                setFile={setFile}
+                image={image}
+                setImage={setImage}
+                loading={loading}
+              />
+            )}
           </div>
           {/* Modal footer */}
           <div className="flex items-center space-x-2 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
