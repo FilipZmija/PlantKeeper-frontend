@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Modal from "./Identification/IdentificationDialog";
-
-const SpeedDial: React.FC = () => {
+type TSpeedDailProps = {
+  className?: string;
+};
+const SpeedDial = ({ className }: TSpeedDailProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => {
@@ -19,7 +21,7 @@ const SpeedDial: React.FC = () => {
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
-      <div className="fixed end-28 bottom-14 group">
+      <div className={`fixed end-28 bottom-14 group ${className}`}>
         <div
           id="speed-dial-menu-default"
           className={`flex flex-col items-center ${
@@ -65,7 +67,7 @@ const SpeedDial: React.FC = () => {
           onClick={toggleMenu}
           aria-controls="speed-dial-menu-default"
           aria-expanded={isOpen}
-          className="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
+          className="flex items-center justify-center text-white bg-dark-green rounded-full w-14 h-14 hover:bg-text-green ring-0 focus:ring-4 focus:ring-green focus:outline-none"
         >
           <svg
             className={`w-5 h-5 transition-transform ${
