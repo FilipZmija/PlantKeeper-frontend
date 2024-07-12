@@ -1,10 +1,9 @@
-import React, { FormEvent, useEffect, useState } from "react";
-import UploadImage from "./UploadImage";
-import axios, { AxiosResponse } from "axios";
-import { set } from "react-datepicker/dist/date_utils";
+import React, { useEffect, useState } from "react";
 import { TPlant } from "../types/plants";
 import PlantCard from "../Plants/PlantCard";
 import IdentifiedPlant from "./IdentifiedPlant";
+import UploadIdentification from "./UploadIdentification";
+import { useAppSelector } from "../redux/hooks";
 
 type ModalProps = {
   isOpen: boolean;
@@ -12,9 +11,12 @@ type ModalProps = {
 };
 const Modal = ({ isOpen, onClose }: ModalProps) => {
   const [file, setFile] = useState<File | null>(null);
+  const [filename, setFileName] = useState<string | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [identifiedPlant, setIdentifiedPlant] = useState<TPlant | null>(null);
+  const [isCreated, setIsCreated] = useState(false);
+  const index = useAppSelector((state) => state.ownedPlant.ownedPlants.length);
   useEffect(() => {
     setFile(null);
     setImage(null);
@@ -33,41 +35,9 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
     setIdentifiedPlant(null);
   };
 
-  const handleIdentify = async () => {
-    if (!file) {
-      alert("Please select a file to upload.");
-      return;
-    }
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response: AxiosResponse<{ filename: string; result: TPlant[] }> =
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/plants/identify`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      const plantData = response.data.result[0];
-      setIdentifiedPlant(plantData);
-      console.log(response.data);
-      console.log(plantData);
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto overflow-x-hidden bg-gray-900 bg-opacity-40">
       <div className="relative p-4 w-fit max-w-2xl max-h-full">
-        {/* Modal content */}
         <div className="relativexs rounded-lg shadow bg-dark-green">
           {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
@@ -97,38 +67,35 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {/* Modal body */}
-          <div className="p-4 md:p-5 space-y-4 w-full flex justify-center">
-            {identifiedPlant && image ? (
+
+          {/* Modal content */}
+          <div
+            className={`flex flex-col items-center transition-all duration-500 `}
+          >
+            {isCreated ? (
+              <PlantCard plantIndex={index - 1} />
+            ) : image && identifiedPlant && filename ? (
               <IdentifiedPlant
+                setIsCreated={setIsCreated}
+                handleDiscard={handleDiscard}
                 plant={identifiedPlant}
-                image={image as string}
+                image={image}
                 size={"small"}
+                filename={filename}
               />
             ) : (
-              <UploadImage
+              <UploadIdentification
+                setFileName={setFileName}
+                handleDiscard={handleDiscard}
                 file={file}
                 setFile={setFile}
                 image={image}
                 setImage={setImage}
                 loading={loading}
+                setLoading={setLoading}
+                setIdentifiedPlant={setIdentifiedPlant}
               />
             )}
-          </div>
-          {/* Modal footer */}
-          <div className="flex items-center space-x-2 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-            <button
-              onClick={handleIdentify}
-              className="text-text-green font-bold hover:bg-green bg-green bg-opacity-55 px-4 py-1 rounded-md active:scale-95"
-            >
-              Identify
-            </button>
-            <button
-              onClick={handleDiscard}
-              className="text-dark-green font-bold hover:bg-green  bg-text-green  px-4 py-1 rounded-md active:scale-95"
-            >
-              Discard image
-            </button>
           </div>
         </div>
       </div>

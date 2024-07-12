@@ -53,6 +53,16 @@ const ownedPlantSlice = createSlice({
         };
       });
     },
+    addOwnedPlant: (state, action: PayloadAction<TOwnedPlant>) => {
+      state.ownedPlants.push(action.payload);
+      state.editMode.push({
+        inEdit: false,
+        editIndex: 0,
+        inEditIndex: 0,
+        animClassSelected: "justify-between items-center",
+        animClassRest: "opacity-0",
+      });
+    },
     setEditIndex: (
       state,
       action: PayloadAction<{ editIndex: number; plantIndex: number }>
@@ -100,6 +110,7 @@ export const {
   setAnimClass,
   setOwnedPlants,
   editOwnedPlant,
+  addOwnedPlant,
 } = ownedPlantSlice.actions;
 
 export default ownedPlantSlice.reducer;

@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 
 type TUploadImage = {
-  file: File | null;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   image: string | null;
   setImage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -9,7 +8,6 @@ type TUploadImage = {
 };
 
 const UploadImage: React.FC<TUploadImage> = ({
-  file,
   setFile,
   image,
   setImage,

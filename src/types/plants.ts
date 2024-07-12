@@ -3,7 +3,7 @@ export type TPlant = {
   name: string;
   apiId?: string;
   commonName?: string;
-  avaibility?: string;
+  availability?: string;
   lightTolerated?: string;
   lightIdeal?: string;
   temperatureMax?: number;

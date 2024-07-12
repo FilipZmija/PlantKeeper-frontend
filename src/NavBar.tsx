@@ -31,22 +31,25 @@ export default function NavBar() {
   };
 
   return (
-    <Disclosure as="nav" className="bg-green">
+    <Disclosure
+      as="nav"
+      className="bg-green fixed w-full z-50 border-b-[1px] border-dark-green"
+    >
       {
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 ">
+            <div className="relatie flex h-16 items-center justify-between">
+              <div className="absolute inset-y-0 left-0 flex items-center xs:hidden"></div>
               <div
                 className={`flex flex-1 items-center justify-center ${
-                  token && "sm:justify-start"
+                  token && "lg:justify-start"
                 }`}
               >
                 <img className="h-12 w-auto" src={icon} alt="Your Company" />
                 <h2 className="text-2xl font-bold text-light-mint mx-4">
                   PlantKeeper
                 </h2>
-                <div className="hidden sm:ml-6 sm:block">
+                <div className="hidden sm:ml-6 lg:block">
                   <div className="flex space-x-4">
                     {token &&
                       navigation.map((item, index) => (

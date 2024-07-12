@@ -6,10 +6,14 @@ import MainView from "./Plants/MainView";
 import NavBar from "./NavBar";
 import axios from "axios";
 import { login } from "./redux/authSlice";
+import SpeedDialMenu from "./SpeedDail";
+import BottomNavigation from "./BottomNavigation";
+import { useWindowSize } from "./hooks/Size";
 export default function App() {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const [loading, setLoading] = React.useState(true);
+
   useEffect(() => {
     const exisitngToken = localStorage.getItem("token");
     if (exisitngToken)
@@ -38,7 +42,11 @@ export default function App() {
   return !loading ? (
     <div className="flex flex-col h-screen">
       <NavBar />
-      {token ? <MainView /> : <Login />}
+      <div className="mt-16">
+        {token ? <MainView /> : <Login />}
+        <SpeedDialMenu className="hidden lg:block" />
+      </div>
+      <BottomNavigation className="block lg:hidden " />
     </div>
   ) : (
     <></>

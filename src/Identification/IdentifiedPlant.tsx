@@ -1,65 +1,59 @@
 import React, { useCallback, useState } from "react";
 
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch } from "../redux/hooks";
 import PlantBasicInfo from "../Plants/PlantInfos/PlantBasicInfo";
-import { TPlant } from "../types/plants";
-
-const cardSizeClasses = {
-  xsmall: "max-w-56",
-  small: "max-w-xs",
-  medium: "max-w-sm",
-  large: "max-w-md",
-};
-
-const cardSizeClassesPadding = {
-  xsmall: "p-2",
-  small: "p-3",
-  medium: "p-4",
-  large: "p-5",
-};
-
-const textSizeClasses = {
-  xsmall: "text-md",
-  small: "text-lg",
-  medium: "text-xl",
-  large: "text-2xl",
-};
-
-const commonNameSizeClasses = {
-  xsmall: "text-sm",
-  small: "text-base",
-  medium: "text-lg",
-  large: "text-xl",
-};
-
-const infoSizeClasses = {
-  xsmall: "text-xs",
-  small: "text-xs",
-  medium: "text-sm",
-  large: "text-base",
-};
-const infoSizeClassesPadding = {
-  xsmall: "p-1 text-xs",
-  small: "p-2 text-xs",
-  medium: "p-2 text-sm",
-  large: "p-3 text-base",
-};
+import { TOwnedPlant, TPlant } from "../types/plants";
+import {
+  cardSizeClasses,
+  cardSizeClassesPadding,
+  commonNameSizeClasses,
+  infoSizeClasses,
+  infoSizeClassesPadding,
+  textSizeClasses,
+} from "../Plants/PlantCardStyles";
+import axios, { AxiosResponse } from "axios";
+import { addOwnedPlant } from "../redux/ownedPlantSlice";
 
 export interface PlantCardProps {
   plant: TPlant;
   image: string;
   size: "xsmall" | "small" | "medium" | "large";
+  handleDiscard: () => void;
+  filename: string;
+  setIsCreated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function PlantCard({
   plant,
   image,
   size = "small",
+  handleDiscard,
+  filename,
+  setIsCreated,
 }: PlantCardProps) {
+  const dispatch = useAppDispatch();
   const sizeClass = cardSizeClasses[size];
   const paddingClass = cardSizeClassesPadding[size];
   const textSizeClass = textSizeClasses[size];
   const commonNameSizeClass = commonNameSizeClasses[size];
+  const infoSizeClass = infoSizeClasses[size];
+  const infoSizeClassPadding = infoSizeClassesPadding[size];
+
+  const handleAdd = async () => {
+    const { id, name } = plant;
+    try {
+      const response: AxiosResponse<TOwnedPlant> = await axios.post(
+        `${process.env.REACT_APP_API_URL}/ownedplant/add`,
+        { id, name, filename }
+      );
+      dispatch(addOwnedPlant(response.data));
+      setIsCreated(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePowerIdentify = () => {};
 
   return (
     <>
@@ -84,7 +78,32 @@ export default function PlantCard({
               {plant.commonName}
             </h5>
           )}
+          <PlantBasicInfo
+            plant={plant}
+            sizeClass={infoSizeClass}
+            sizeClassPadding={infoSizeClassPadding}
+          />
         </div>
+      </div>
+      <div className="flex items-center space-x-2 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <button
+          onClick={handleAdd}
+          className="text-text-green font-bold hover:bg-green bg-green bg-opacity-55 px-4 py-1 rounded-md active:scale-95"
+        >
+          Add
+        </button>
+        <button
+          onClick={handleDiscard}
+          className="text-dark-green font-bold hover:bg-green  bg-text-green  px-4 py-1 rounded-md active:scale-95"
+        >
+          Discard
+        </button>
+        <button
+          onClick={handlePowerIdentify}
+          className="text-dark-green font-bold hover:bg-green  bg-text-green  px-4 py-1 rounded-md active:scale-95"
+        >
+          Power Identify
+        </button>
       </div>
     </>
   );

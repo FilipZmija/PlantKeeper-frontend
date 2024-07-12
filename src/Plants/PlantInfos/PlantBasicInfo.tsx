@@ -2,29 +2,30 @@ import React, { useCallback } from "react";
 import PlantProp from "../Reusable/PlantProp";
 import PlantInfoContainer from "../Reusable/PlantInfoContainer";
 import { useAppSelector } from "../../redux/hooks";
+import { TPlant } from "../../types/plants";
 
 export default function PlantBasicInfo({
-  plantIndex,
+  plant,
   sizeClass,
   sizeClassPadding,
 }: {
-  plantIndex: number;
+  plant: TPlant;
   sizeClass: string;
   sizeClassPadding: string;
 }) {
-  const { plant } = useAppSelector(
-    (state) => state.ownedPlant.ownedPlants[plantIndex]
-  );
+  // const { plant } = useAppSelector(
+  //   (state) => state.ownedPlant.ownedPlants[plantIndex]
+  // );
   const PlantClimatInfo: React.FC = useCallback(
     () => (
       <>
         {plant.climat && <PlantProp name={"Climat"} value={plant.climat} />}
-        {plant.avaibility && (
-          <PlantProp name={"Availability"} value={plant.avaibility} />
+        {plant.availability && (
+          <PlantProp name={"Availability"} value={plant.availability} />
         )}
       </>
     ),
-    [plant.climat, plant.avaibility]
+    [plant.climat, plant.availability]
   );
   const PlantTemperatureInfo: React.FC = useCallback(
     () => (
