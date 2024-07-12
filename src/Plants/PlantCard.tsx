@@ -3,47 +3,14 @@ import Carousel from "./Reusable/Carousel";
 import PlantBasicInfo from "./PlantInfos/PlantBasicInfo";
 import OwnedPlantInfo from "./PlantInfos/OwnedPlantInfo";
 import { useAppSelector } from "../redux/hooks";
-
-const cardSizeClasses = {
-  xsmall: "max-w-56",
-  small: "max-w-xs",
-  medium: "max-w-sm",
-  large: "max-w-md",
-};
-
-const cardSizeClassesPadding = {
-  xsmall: "p-2",
-  small: "p-3",
-  medium: "p-4",
-  large: "p-5",
-};
-
-const textSizeClasses = {
-  xsmall: "text-md",
-  small: "text-lg",
-  medium: "text-xl",
-  large: "text-2xl",
-};
-
-const commonNameSizeClasses = {
-  xsmall: "text-sm",
-  small: "text-base",
-  medium: "text-lg",
-  large: "text-xl",
-};
-
-const infoSizeClasses = {
-  xsmall: "text-xs",
-  small: "text-xs",
-  medium: "text-sm",
-  large: "text-base",
-};
-const infoSizeClassesPadding = {
-  xsmall: "p-1 text-xs",
-  small: "p-2 text-xs",
-  medium: "p-2 text-sm",
-  large: "p-3 text-base",
-};
+import {
+  cardSizeClasses,
+  cardSizeClassesPadding,
+  textSizeClasses,
+  commonNameSizeClasses,
+  infoSizeClasses,
+  infoSizeClassesPadding,
+} from "./PlantCardStyles";
 
 export interface PlantCardProps {
   plantIndex: number;
@@ -71,7 +38,7 @@ export default function PlantCard({
   const plantBasicInfo = useCallback(
     () => (
       <PlantBasicInfo
-        plantIndex={plantIndex}
+        plant={plant}
         sizeClass={infoSizeClass}
         sizeClassPadding={infoSizeClassPadding}
       />
@@ -104,7 +71,7 @@ export default function PlantCard({
             isModalOpen ? "xs:h-96" : "xs:h-72"
           } ${
             isModalOpen ? "md:h-96" : "md:h-36"
-          } w-full rounded-t-lg object-cover cursor-pointer`}
+          } w-full rounded-t-md object-cover cursor-pointer`}
           src={image}
           alt={plant.name}
           onClick={handleImageClick}
